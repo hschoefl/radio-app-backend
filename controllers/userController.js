@@ -32,6 +32,44 @@ const getUserFavorites = asyncHandler(async (req, res) => {
   }
 });
 
+// add a channel to users favorites
+
+const addFavorite = asyncHandler(async (req, res) => {
+  const { id, favoriteId } = req.params;
+
+  // first grab the user from id and check if it exists
+  const user = await User.findById(id);
+  if (!user) {
+    res.status(401);
+    throw new Error(`User with ID ${id} does not exist!`);
+  }
+
+  // second grab the channel and check if it exists
+  const channel = await Channel.findById(favoriteId);
+  if (!channel) {
+    res.status(401);
+    throw new Error(`Channel with ID ${id} does not exist!`);
+  }
+
+  // check, if the favorite Id is included in the Users favorites array
+  if (!user.favoriteChannels.includes(favoriteId)) {
+    user.favoriteChannels.push(favoriteId);
+    // now save it to the database
+    await user.save();
+  } else {
+    res.status(401);
+    throw new Error('Channel is already favorite.');
+  }
+
+  // sende die aktuellen Favoriten zurück, egal ob ich welche dazugefügt habe oder nicht
+  res.status(200).json(user.favoriteChannels);
+});
+
+// delete a channel from users favorites
+const deleteFavorite = asyncHandler(async (req, res) => {
+  res.send('Delete favorite');
+});
+
 // UPDATE
 const addRemoveFavorite = asyncHandler(async (req, res) => {
   const { id, favoriteId } = req.params;
@@ -70,4 +108,10 @@ const addRemoveFavorite = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { getUser, getUserFavorites, addRemoveFavorite };
+module.exports = {
+  getUser,
+  getUserFavorites,
+  addRemoveFavorite,
+  addFavorite,
+  deleteFavorite,
+};

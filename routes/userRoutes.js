@@ -15,6 +15,7 @@ router.get('/me', verifyToken, getUser);
 router.get('/:id/favorites', verifyToken, getUserFavorites);
 
 // UPDATE
-router.patch('/:id/:favoriteId', verifyToken, addRemoveFavorite);
+router.patch('/:id/:favoriteId', verifyToken, addFavorite);
+router.delete('/:id/:favoriteId', verifyToken, deleteFavorite);
 
 module.exports = router;
