@@ -6,7 +6,8 @@ const router = express.Router();
 const {
   getUser,
   getUserFavorites,
-  addRemoveFavorite,
+  addFavorite,
+  deleteFavorite,
 } = require('../controllers/userController');
 
 // READ

@@ -35,7 +35,7 @@ const register = asyncHandler(async (req, res) => {
     favoriteChannels,
   });
 
-  await newUser.save();
+  await await newUser.save();
 
   res.status(201).json({
     _id,
@@ -50,7 +50,9 @@ const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   // try to find the user in the database
-  const user = await User.findOne({ email: email });
+  const user = await User.findOne({ email: email }).populate(
+    'favoriteChannels'
+  );
 
   if (!user) {
     res.status(400);
@@ -67,17 +69,18 @@ const login = asyncHandler(async (req, res) => {
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
   delete user.password; // delete the property password from the user object so that it is not sent back to the front-end
 
-  res
-    .status(200)
-    .json({
-      token,
-      user: {
-        _id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-      },
-    });
+  console.log(user);
+
+  res.status(200).json({
+    token,
+    user: {
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      favoriteChannels: user.favoriteChannels,
+    },
+  });
 });
 
 module.exports = { register, login };

@@ -33,10 +33,13 @@ const userSchema = new Schema(
       type: String,
       default: '',
     },
-    favoriteChannels: {
-      type: Array,
-      default: [],
-    },
+    favoriteChannels: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Channel',
+        default: [],
+      },
+    ],
   },
   {
     timestamps: true,
