@@ -41,9 +41,13 @@ mongoose
     console.log('Connected to MongoDB database "radio"');
 
     // only if DB is connected we can spawn the express server
-    app.listen(PORT, () => {
-      console.log(`Express server is listening on port ${PORT}.`);
-    });
+    app
+      .listen(PORT, () => {
+        console.log(`Express server is listening on port ${PORT}.`);
+      })
+      .on('error', (e) => {
+        console.log('Can not start express server: ', e.message);
+      });
   })
   .catch((error) => {
     console.log(error);
