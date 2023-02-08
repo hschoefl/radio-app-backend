@@ -23,6 +23,13 @@ const getChannelsFromCloud = asyncHandler(async (req, res) => {
   res.json({ channels: data });
 });
 
+// holt sich eine Liste der aktuellen Radio Channels von der A1 Cloud für IOS Devices
+const getChannelsFromCloudIOS = asyncHandler(async (req, res) => {
+  const data = await fetchChannels();
+
+  res.json(data);
+});
+
 // dieser Controller aktualisert die Kanäle in der Datenbank mit den Daten aus der Cloud
 const updateChannels = asyncHandler(async (req, res) => {
   let numberOfChannelsUpdated = 0;
@@ -82,6 +89,32 @@ const getAllChannels = async (req, res) => {
   }
 };
 
+// alle Radio Channels aus der Datenbank holen
+const getAllChannelsIOS = async (req, res) => {
+  try {
+    const channels = await Channel.find({});
+
+    // sort channels alphabetically
+    channels.sort((a, b) => {
+      const nameA = a.name.toUpperCase(); // ignore upper and lowercase
+      const nameB = b.name.toUpperCase(); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+
+      // names must be equal
+      return 0;
+    });
+
+    res.json(channels);
+  } catch (error) {
+    res.status(400).json({ message: 'Can not fetch channels from DB.' });
+  }
+};
+
 const createChannel = async (req, res) => {
   // console.log(req.body);
 
@@ -119,4 +152,6 @@ module.exports = {
   getChannelsFromCloud,
   createChannel,
   updateChannels,
+  getChannelsFromCloudIOS,
+  getAllChannelsIOS,
 };
