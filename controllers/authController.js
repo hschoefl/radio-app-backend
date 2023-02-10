@@ -69,7 +69,7 @@ const login = asyncHandler(async (req, res) => {
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
   delete user.password; // delete the property password from the user object so that it is not sent back to the front-end
 
-  console.log(user);
+  // console.log(user);
 
   res.status(200).json({
     token,
