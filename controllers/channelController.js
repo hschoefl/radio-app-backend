@@ -1,6 +1,6 @@
-const asyncHandler = require('express-async-handler');
+const asyncHandler = require("express-async-handler");
 
-const Channel = require('../models/Channel');
+const Channel = require("../models/Channel");
 
 // diese Funktion wurde gemacht um Code Duplikation zu vermeiden
 const fetchChannels = asyncHandler(async () => {
@@ -8,7 +8,7 @@ const fetchChannels = asyncHandler(async () => {
 
   if (!response.ok) {
     res.status(401);
-    throw new Error('Can not fetch channels from cloud!');
+    throw new Error("Can not fetch channels from cloud!");
   }
 
   const data = await response.json();
@@ -25,7 +25,9 @@ const getChannelsFromCloud = asyncHandler(async (req, res) => {
 
 // holt sich eine Liste der aktuellen Radio Channels von der A1 Cloud für IOS Devices
 const getChannelsFromCloudIOS = asyncHandler(async (req, res) => {
+  console.log("Entering getChannelsFromCloudIOS");
   const data = await fetchChannels();
+  console.log(data);
 
   res.json(data);
 });
@@ -85,7 +87,7 @@ const getAllChannels = async (req, res) => {
 
     res.json({ channels });
   } catch (error) {
-    res.status(400).json({ message: 'Can not fetch channels from DB.' });
+    res.status(400).json({ message: "Can not fetch channels from DB." });
   }
 };
 
@@ -111,17 +113,17 @@ const getAllChannelsIOS = async (req, res) => {
 
     res.json(channels);
   } catch (error) {
-    res.status(400).json({ message: 'Can not fetch channels from DB.' });
+    res.status(400).json({ message: "Can not fetch channels from DB." });
   }
 };
 
 const createChannel = async (req, res) => {
-  // console.log(req.body);
+  console.log(req.body);
 
   const { name, genre, description, logoUrl, audioUrl } = req.body;
 
   if (!name || genre.length === 0 || !description || !logoUrl || !audioUrl) {
-    return res.status(400).json({ message: 'All fields must be provided.' });
+    return res.status(400).json({ message: "All fields must be provided." });
   }
 
   try {
@@ -138,12 +140,12 @@ const createChannel = async (req, res) => {
     if (!returnedChannel) {
       res
         .status(400)
-        .json({ message: 'Can not create new radio channel in database.' });
+        .json({ message: "Can not create new radio channel in database." });
     }
 
     res.json(returnedChannel);
   } catch (error) {
-    res.status(400).json({ message: 'Can not create radio channel.' });
+    res.status(400).json({ message: "Can not create radio channel." });
   }
 };
 
